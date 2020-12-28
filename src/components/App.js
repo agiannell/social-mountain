@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
+import Post from './Post/Post'
 import './App.css';
 
 import Header from './Header/Header';
@@ -19,19 +20,28 @@ class App extends Component {
   }
   
   componentDidMount() {
-
+    axios
+      .get('https://practiceapi.devmountain.com/api/posts')
+      .then(res => this.setState({posts: res.data}))
+      // .catch(_ => alert('Could not get Posts'))
   }
 
-  updatePost() {
-  
+  updatePost(id, text) {
+    axios
+      .put(`https://practiceapi.devmountain.com/api/posts?id=${ id }`, {text})
+      .then(res => this.setState({posts: res.data}))
   }
 
-  deletePost() {
-
+  deletePost(id) {
+    axios
+      .delete(`https://practiceapi.devmountain.com/api/posts?id=${ id }`)
+      .then(res => this.setState({posts: res.data}))
   }
 
-  createPost() {
-
+  createPost(text) {
+    axios
+      .post('https://practiceapi.devmountain.com/api/posts/', {text})
+      .then(res => this.setState({posts: res.data}))
   }
 
   render() {
@@ -39,12 +49,23 @@ class App extends Component {
 
     return (
       <div className="App__parent">
-        <Header />
+        <Header posts={posts}/>
 
         <section className="App__content">
 
-          <Compose />
-          
+          <Compose createPostFn={this.createPost} />
+          {posts.map((e) => {
+            return (
+              <Post 
+                key={e.id}
+                id={e.id}
+                text={e.text}
+                date={e.date}
+                updatePostFn={this.updatePost}
+                deletePostFn={this.deletePost}
+              />
+            )
+          })}
         </section>
       </div>
     );

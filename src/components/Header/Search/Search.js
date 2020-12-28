@@ -12,9 +12,11 @@ export default class Search extends Component {
       <section className="Search__parent">
 
         <div className="Search__content">
-          <input placeholder="Search Your Feed" />
+          <input  placeholder="Search Your Feed" 
+                  onChange={e => this.handleChange(e.target.value)}/>
 
-          <SearchIcon id="Search__icon" />
+          <SearchIcon id="Search__icon"
+                        onClick={this.filteredSearch} />
         </div>
         
       </section>
